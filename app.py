@@ -16,8 +16,11 @@ CLASS_NAMES = ckpt["class_names"]
 
 model = models.mobilenet_v2(weights=None)
 model.classifier = nn.Sequential(
+    nn.Dropout(0.4),
+    nn.Linear(model.last_channel, 256),
+    nn.ReLU(),
     nn.Dropout(0.3),
-    nn.Linear(model.last_channel, len(CLASS_NAMES)),
+    nn.Linear(256, len(CLASS_NAMES)),
 )
 model.load_state_dict(ckpt["model_state_dict"])
 model.eval()
@@ -332,5 +335,5 @@ def predict():
     })
 
 if __name__ == "__main__":
-    print("🥕 CarrotAI запущен → http://localhost:5000")
-    app.run(debug=False, host="127.0.0.1", port=5000)
+    print("🥕 CarrotAI запущен → http://localhost:8080")
+    app.run(debug=False, host="127.0.0.1", port=8080)
